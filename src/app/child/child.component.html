@@ -1,0 +1,134 @@
+<form #loginForm="ngForm" (ngSubmit)="loginUser(loginForm.value)">
+  <input
+    type="email"
+    required
+    #name="ngModel"
+    name="email"
+    email
+    placeholder="Enter email"
+    [(ngModel)]="email"
+  /><br />
+  <span *ngIf="name.invalid && name.touched" style="color: red">
+    Please enter a valid input
+  </span>
+  <br />
+  <br />
+  <input
+    type="password"
+    name="password"
+    required
+    #password="ngModel"
+    minlength="2"
+    placeholder="Enter Password"
+    [(ngModel)]="passwordEntered"
+  />
+  <br />
+  <span *ngIf="password.invalid && password.touched" style="color: red"
+    >Please enter a valid input</span
+  >
+  <br />
+  <input type="submit" value="submit" [disabled]="loginForm.invalid" />
+  <input type="submit" value="loadData" (click)="load(loginForm)" />
+  <input type="submit" value="reset" (click)="reset(loginForm)" />
+</form>
+
+<br />
+<br />
+<div>
+  <h2>REACTIVE FORMS</h2>
+  <form [formGroup]="reactiveForm" (ngSubmit)="submitForm()">
+    <input
+      type="text"
+      name="firstname"
+      placeholder="Enter name"
+      formControlName="firstname"
+    /><br />
+    <span
+      *ngIf="
+        reactiveForm.get('firstname')?.errors?.required &&
+        reactiveForm.get('firstname')?.touched
+      "
+    >
+      This field is required
+      <br />
+    </span>
+
+    <span
+      *ngIf="
+        reactiveForm.get('firstname')?.errors?.minlength &&
+        reactiveForm.get('firstname')?.touched
+      "
+    >
+      minlength should be 10 characters
+    </span>
+    <br /><br />
+
+    <input
+      type="password"
+      name="password"
+      formControlName="password"
+      placeholder="Enter Password"
+    />
+    <span
+      *ngIf="
+        reactiveForm.get('password')?.errors?.required &&
+        reactiveForm.get('password')?.touched
+      "
+    >
+      This field is required
+      <br />
+    </span>
+
+    <span
+      *ngIf="
+        reactiveForm.get('password')?.errors?.minlength &&
+        reactiveForm.get('password')?.touched
+      "
+    >
+      The min should be 5
+      <br />
+    </span>
+    <span
+      *ngIf="
+        reactiveForm.get('password')?.errors?.maxlength &&
+        reactiveForm.get('password')?.touched
+      "
+    >
+      The max should be 10 characters
+    </span>
+    <br /><br />
+    <div formArrayName="users">
+      <label>Users</label>
+      <div *ngFor="let user of usersArray.controls; let i = index">
+        <input type="text" [formControlName]="i" />
+      </div>
+    </div>
+
+    <!--a div with formArrayName and formGroup-->
+    <div formArrayName="employees">
+      <label>Employees</label>
+      <div
+        *ngFor="let employee of employeesArray.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <input type="text" formControlName="name" />
+        <input type="text" formControlName="dept" />
+        <input type="text" formControlName="age" (blur)="assignDept(i)" />
+        <input type="button" (click)="removeEmployees(i)" value="Remove" />
+      </div>
+    </div>
+    <input
+      type="submit"
+      value="loadData"
+      (click)="loadReactive()"
+    /><br /><br />
+    <input
+      type="submit"
+      value="submit"
+      [disabled]="reactiveForm.invalid"
+    /><br /><br />
+
+    <input type="button" (click)="addEmployees()" value="Add New Employee" />
+    <input type="submit" value="reset" (click)="resetReactive()" />
+  </form>
+</div>
